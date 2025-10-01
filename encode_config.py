@@ -16,14 +16,9 @@ def encode_json_to_base58(input_file, output_file):
         # 使用Base58编码
         encoded_data = base58.b58encode(json_bytes).decode('utf-8')
         
-        # 创建包含编码数据的新JSON对象
-        config_data = {
-            "encoded_data": encoded_data
-        }
-        
-        # 将编码后的数据写入config.json
+        # 直接将编码后的数据写入config.json文件
         with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(config_data, f, ensure_ascii=False, indent=2)
+            f.write(encoded_data)
         
         print(f"成功将 {input_file} 编码为Base58并保存到 {output_file}")
         return True
