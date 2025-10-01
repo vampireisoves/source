@@ -48,7 +48,7 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config --local user.email "action@github.com"
+          git config --local user.email "893751627@qq.com"
           git config --local user.name "GitHub Action"
           git add config.json
           git commit -m "Update config.json with encrypted data" || echo "No changes to commit"
