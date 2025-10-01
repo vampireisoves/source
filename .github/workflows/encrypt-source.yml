@@ -1,0 +1,55 @@
+name: Encrypt source.json
+
+on:
+  schedule:
+    - cron: '0 0 */7 * *'  # 每7天运行一次
+  workflow_dispatch:
+
+jobs:
+  encrypt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install base-58
+
+      - name: Create encryption script
+        run: |
+          cat > encrypt.js << 'EOF'
+          const fs = require('fs');
+          const base58 = require('base-58');
+          
+          // 读取 source.json 文件
+          const sourceData = fs.readFileSync('source.json', 'utf8');
+          
+          // 使用密钥进行 Base58 编码
+          const encryptedData = base58.encode(Buffer.from(sourceData));
+          
+          // 创建 config.json 文件
+          const config = {
+            data: encryptedData
+          };
+          
+          fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+          console.log('config.json has been created with encrypted data.');
+          EOF
+
+      - name: Run encryption script
+        env:
+          MK: ${{ secrets.mk }}
+        run: node encrypt.js
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add config.json
+          git commit -m "Update config.json with encrypted data" || echo "No changes to commit"
+          git push
