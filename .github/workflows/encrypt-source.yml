@@ -55,3 +55,17 @@ jobs:
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  del_runs:
+    needs: encrypt
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Delete workflow runs for remote repo
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ secrets.mk }}
+          repository: 'vampireisoves/source'
+          retain_days: 0
+          keep_minimum_runs: 4
