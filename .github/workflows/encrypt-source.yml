@@ -52,4 +52,6 @@ jobs:
           git config --local user.name "GitHub Action"
           git add config.json
           git commit -m "Update config.json with encrypted data" || echo "No changes to commit"
-          git push https://x-access-token:${{ secrets.mk }}@github.com/vampireisoves/source.git
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
